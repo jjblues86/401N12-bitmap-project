@@ -1,0 +1,22 @@
+{
+  "name": "401n12-bitmap-project",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jjblues86/401N12-bitmap-project.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jjblues86/401N12-bitmap-project/issues"
+  },
+  "homepage": "https://github.com/jjblues86/401N12-bitmap-project#readme",
+  "devDependencies": {
+    "jest": "^24.1.0"
+  }
+}
