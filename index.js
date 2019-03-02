@@ -8,7 +8,7 @@ const fs = require('fs');
  * @constructor
  */
 function Bitmap(filePath) {
-    this.file = filePath;
+  this.file = filePath;
 }
 
 /**
@@ -16,9 +16,9 @@ function Bitmap(filePath) {
  * @param buffer
  */
 Bitmap.prototype.parse = function(buffer) {
-    this.buffer = buffer;
-    this.type = buffer.toString('utf-8', 0, 2);
-    //... and so on
+  this.buffer = buffer;
+  this.type = buffer.toString('utf-8', 0, 2);
+  this.colorTable = []
 };
 
 /**
@@ -26,9 +26,9 @@ Bitmap.prototype.parse = function(buffer) {
  * @param operation
  */
 Bitmap.prototype.transform = function(operation) {
-    // This is really assumptive and unsafe
-    transforms[operation](this);
-    this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
+  // This is really assumptive and unsafe
+  transforms[operation](this);
+  this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
 };
 
 /**
@@ -39,16 +39,18 @@ Bitmap.prototype.transform = function(operation) {
  */
 const transformGreyscale = (bmp) => {
 
-    console.log('Transforming bitmap into greyscale', bmp);
+  console.log('Transforming bitmap into greyscale', bmp);
 
-    //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
+  //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
 
-    //TODO: alter bmp to make the image greyscale ...
+  //TODO: alter bmp to make the image greyscale ...
+  // const newBmp = new Buffer(bmp);
+
 
 };
 
 const doTheInversion = (bmp) => {
-    bmp = {};
+  bmp = {};
 }
 
 /**
@@ -56,34 +58,34 @@ const doTheInversion = (bmp) => {
  * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
  */
 const transforms = {
-    greyscale: transformGreyscale,
-    invert: doTheInversion
+  greyscale: transformGreyscale,
+  invert: doTheInversion
 };
 
 // ------------------ GET TO WORK ------------------- //
 
 function transformWithCallbacks() {
 
-    fs.readFile(file, (err, buffer) => {
+  fs.readFile(file, (err, buffer) => {
 
-        if (err) {
-            throw err;
-        }
+    if (err) {
+      throw err;
+    }
 
-        bitmap.parse(buffer);
+    bitmap.parse(buffer);
 
-        bitmap.transform(operation);
+    bitmap.transform(operation);
 
-        // Note that this has to be nested!
-        // Also, it uses the bitmap's instance properties for the name and thew new buffer
-        fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
-            if (err) {
-                throw err;
-            }
-            console.log(`Bitmap Transformed: ${bitmap.newFile}`);
-        });
-
+    // Note that this has to be nested!
+    // Also, it uses the bitmap's instance properties for the name and thew new buffer
+    fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
+      if (err) {
+        throw err;
+      }
+      console.log(`Bitmap Transformed: ${bitmap.newFile}`);
     });
+
+  });
 }
 
 // TODO: Explain how this works (in your README)
