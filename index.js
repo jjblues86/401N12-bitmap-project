@@ -64,7 +64,17 @@ const transformGreyscale = (bmp) => {
     //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
 
     //TODO: alter bmp to make the image greyscale ...
+    let tracker = 0;
+    let counter = 0;
 
+    for(let i = 54; i < 1078; i++) {
+        if(bmp[i] == 255)
+            bmp[i] = 128;
+        tracker += bmp[i];
+        if(counter == 3)
+            bmp[i] = Math.round(tracker / 3);
+        counter++;
+    };
 };
 
 const doTheInversion = (bmp) => {
