@@ -116,3 +116,4 @@ typings/
 
 # Ours
 test/
+.idea
