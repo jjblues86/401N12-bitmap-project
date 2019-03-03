@@ -7,8 +7,7 @@ LAB: Buffers - Bitmap Transformer
 LAB: Buffers - Bitmap Transformer
 https://travis-ci.com/
 
-### Group Authors: Sarkis Aghazarian, Alistair Blake, Andrew Davis
-, Jerome Joof
+### Group Authors: Sarkis Aghazarian, Alistair Blake, Andrew Davis, Jerome Joof
 ### Links and Resources
 repo https://github.com/jjblues86/401N12-bitmap-project
 https://travis-ci.com/
