@@ -50,12 +50,12 @@ Bitmap.prototype.transform = function(operation) {
     this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
 };
 
-// /**
-//  * Sample Transformer (greyscale)
-//  * Would be called by Bitmap.transform('greyscale')
-//  * Pro Tip: Use "pass by reference" to alter the bitmap's buffer in place so you don't have to pass it around ...
-//  * @param bmp
-//  */
+/**
+ * Sample Transformer (greyscale)
+ * Would be called by Bitmap.transform('greyscale')
+ * Pro Tip: Use "pass by reference" to alter the bitmap's buffer in place so you don't have to pass it around ...
+ * @param bmp
+ */
 
 const transformGreyscale = (bmp) => {
 
@@ -64,27 +64,29 @@ const transformGreyscale = (bmp) => {
     //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
 
     //TODO: alter bmp to make the image greyscale ...
-    let tracker = 0;
-    let counter = 0;
-
-    for(let i = 54; i < 1078; i++) {
-        if(bmp[i] == 255)
-            bmp[i] = 128;
-        tracker += bmp[i];
-        if(counter == 3)
-            bmp[i] = Math.round(tracker / 3);
-        counter++;
-    };
+let average = 0;
+for(let i = 54; i < bmp.length; i++) {
+        average += bmp[i];
+    if(i % 3 == 0 && bmp[i] != 0) {
+        average = Math.round(average / 3);
+        bmp[i] = average;
+        bmp[i - 1] = average;
+        bmp[i - 2] = average;
+        }
+    }
 };
 
 const doTheInversion = (bmp) => {
     bmp = {};
+    for(let i = 54; i <  bmp.length; i++) {
+        bmp[i] = 255 -  bmp[i];
+    };
 };
 
-// /**
-//  * A dictionary of transformations
-//  * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
-//  */
+/**
+ * A dictionary of transformations
+ * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
+ */
 
 const transforms = {
     greyscale: transformGreyscale,
@@ -93,33 +95,33 @@ const transforms = {
 
 // ------------------ GET TO WORK ------------------- //
 
-function transformWithCallbacks() {
+    function transformWithCallbacks() {
 
-    fs.readFile(`${__dirname}/assets/24bit.bmp`, (err, buffer) => {
+        fs.readFile(file, (err, buffer) => {
 
-        if (err) {
-            throw err;
-        }
-
-        bitmap.parse(buffer);
-
-        bitmap.transform(operation);
-
-        // Note that this has to be nested!
-        // Also, it uses the bitmap's instance properties for the name and thew new buffer
-        fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
             if (err) {
                 throw err;
             }
-            console.log(`Bitmap Transformed: ${bitmap.newFile}`);
+
+            bitmap.parse(buffer);
+
+            bitmap.transform(operation);
+
+            // Note that this has to be nested!
+            // Also, it uses the bitmap's instance properties for the name and thew new buffer
+            fs.writeFile(bitmap.newFile, bitmap.buffer, (err, out) => {
+                if (err) {
+                    throw err;
+                }
+                console.log(`Bitmap Transformed: ${bitmap.newFile}`);
+            });
+
         });
+    }
 
-    });
-}
+// TODO: Explain how this works (in your README)
+    const [file, operation] = process.argv.slice(2);
 
-//TODO: Explain how this works (in your README)
-const [file, operation] = process.argv.slice(2);
+    let bitmap = new Bitmap(file);
 
-let bitmap = new Bitmap(file);
-console.log('bitmap: ', bitmap.parse());
-transformWithCallbacks();
+    transformWithCallbacks();
