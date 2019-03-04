@@ -5,6 +5,7 @@ const fs = require('fs');
 
 // Need to create a bitmap object divided into arrays: header, width, height, color planes, pixels per bit, color pixels66
 
+console.log('step 1')
 
 /**
  * Bitmap -- receives a file name, used in the transformer to note the new buffer
@@ -16,6 +17,8 @@ const fs = require('fs');
 function Bitmap(filePath) {
     this.file = filePath;
 };
+
+console.log('step 2')
 
 /**
  * Parser -- accepts a buffer and will parse through it, according to the specification, creating object properties for each segment of the file
@@ -34,10 +37,12 @@ Bitmap.prototype.parse = function(buffer) {
     this.compressMeth = buffer.readUInt32LE(30);
     this.numberColors = buffer.readUInt32LE(46);
     this.pixelData = buffer.slice(1078, buffer.length);
-    this.colorTable = buffer.slice(54, 1078);
+    this.colorTable = buffer.slice(54, 1078); //This is the buffer that will change color output
     return this;
     //... and so on
 };
+
+console.log('step 3')
 
 /**
  * Transform a bitmap using some set of rules. The operation points to some function, which will operate on a bitmap instance
@@ -46,9 +51,11 @@ Bitmap.prototype.parse = function(buffer) {
 
 Bitmap.prototype.transform = function(operation) {
     // This is really assumptive and unsafe
-    transforms[operation](this);
+    // transforms[operation](this.colorTable); //The "transforms" doesn't do anything
     this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
 };
+
+console.log('step 4')
 
 /**
  * Sample Transformer (greyscale)
@@ -76,12 +83,15 @@ for(let i = 54; i < bmp.length; i++) {
     }
 };
 
+
 const doTheInversion = (bmp) => {
     bmp = {};
     for(let i = 54; i <  bmp.length; i++) {
         bmp[i] = 255 -  bmp[i];
     };
 };
+
+console.log('step 5')
 
 /**
  * A dictionary of transformations
@@ -92,6 +102,8 @@ const transforms = {
     greyscale: transformGreyscale,
     invert: doTheInversion
 };
+
+console.log('step 6')
 
 // ------------------ GET TO WORK ------------------- //
 
