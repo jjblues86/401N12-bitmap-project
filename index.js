@@ -88,8 +88,7 @@ transformGreyscale: (bmp) => {
 
 
     doTheInversion: (bmp) => {
-        bmp = {};
-        for(let i = 54; i <  bmp.length; i++) {
+        for(let i = 0; i <  bmp.length; i++) {
             bmp[i] = 255 -  bmp[i];
         }
     },
