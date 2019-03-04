@@ -2,7 +2,7 @@
   "name": "401n12-bitmap-project",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "bitmap.js",
   "scripts": {
     "test": "jest --coverage"
   },

@@ -29,15 +29,15 @@ Bitmap.prototype.parse = function(buffer) {
     this.buffer = buffer;
     this.type = buffer.toString('utf-8', 0, 2);
     this.size = buffer.readUInt32LE(2);
-    this.pixelDataStart = buffer.readUInt32LE(10);
+    this.pixelsStart = buffer.readUInt32LE(10);
     this.dibHeaderSize  = buffer.readUInt32LE(14);
     this.width = buffer.readUInt32LE(18);
     this.height = buffer.readUInt32LE(22);
     this.bitDepth = buffer.readUInt16LE(28);
-    this.compressMeth = buffer.readUInt32LE(30);
-    this.numberColors = buffer.readUInt32LE(46);
-    this.pixelData = buffer.slice(1078, buffer.length);
-    this.colorTable = buffer.slice(54, 1078); //This is the buffer that will change color output
+    this.compressMethod = buffer.readUInt32LE(30);
+    this.numberOfColors = buffer.readUInt32LE(46);
+    this.pixels = buffer.slice(1078, buffer.length);
+    this.colorPalette = buffer.slice(54, 1078); //This is the buffer that will change color output
     return this;
     //... and so on
 };
@@ -51,7 +51,7 @@ console.log('step 3')
 
 Bitmap.prototype.transform = function(operation) {
     // This is really assumptive and unsafe
-    // transforms[operation](this.colorTable); //The "transforms" doesn't do anything
+    transforms[operation](this.colorPalette); //The "transforms" doesn't do anything
     this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
 };
 
@@ -64,31 +64,35 @@ console.log('step 4')
  * @param bmp
  */
 
-const transformGreyscale = (bmp) => {
+const transforms = {
+
+transformGreyscale: (bmp) => {
 
     console.log('Transforming bitmap into greyscale', bmp);
 
     //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
 
     //TODO: alter bmp to make the image greyscale ...
-let average = 0;
-for(let i = 54; i < bmp.length; i++) {
-        average += bmp[i];
-    if(i % 3 == 0 && bmp[i] != 0) {
-        average = Math.round(average / 3);
-        bmp[i] = average;
-        bmp[i - 1] = average;
-        bmp[i - 2] = average;
+    let average = 0;
+    for(let i = 54; i < bmp.length; i++) {
+            average += bmp[i];
+        if(i % 3 == 0 && bmp[i] != 0) {
+            average = Math.round(average / 3);
+            bmp[i] = average;
+            bmp[i - 1] = average;
+            bmp[i - 2] = average;
+            }
         }
-    }
-};
+    },
 
 
-const doTheInversion = (bmp) => {
-    bmp = {};
-    for(let i = 54; i <  bmp.length; i++) {
-        bmp[i] = 255 -  bmp[i];
-    };
+    doTheInversion: (bmp) => {
+        bmp = {};
+        for(let i = 54; i <  bmp.length; i++) {
+            bmp[i] = 255 -  bmp[i];
+        }
+    },
+
 };
 
 console.log('step 5')
@@ -98,10 +102,10 @@ console.log('step 5')
  * Each property represents a transformation that someone could enter on the command line and then a function that would be called on the bitmap to do this job
  */
 
-const transforms = {
-    greyscale: transformGreyscale,
-    invert: doTheInversion
-};
+// const transforms = {
+//     greyscale: transformGreyscale,
+//     invert: doTheInversion
+// }; //don't need this anymore since "tarnsforms" is declared above
 
 console.log('step 6')
 
