@@ -27,6 +27,7 @@ console.log('step 2')
 
 Bitmap.prototype.parse = function(buffer) {
     this.buffer = buffer;
+    console.log(this.buffer.length)
     this.type = buffer.toString('utf-8', 0, 2);
     this.size = buffer.readUInt32LE(2);
     this.pixelsStart = buffer.readUInt32LE(10);
@@ -37,7 +38,7 @@ Bitmap.prototype.parse = function(buffer) {
     this.compressMethod = buffer.readUInt32LE(30);
     this.numberOfColors = buffer.readUInt32LE(46);
     this.pixels = buffer.slice(1078, buffer.length);
-    this.colorPalette = buffer.slice(54, 1078); //This is the buffer that will change color output
+    this.colorPalette = buffer.slice(54, buffer.length); //This is the buffer that will change color output
     return this;
     //... and so on
 };
@@ -51,7 +52,7 @@ console.log('step 3')
 
 Bitmap.prototype.transform = function(operation) {
     // This is really assumptive and unsafe
-    transforms[operation](this.colorPalette); //The "transforms" doesn't do anything
+    transforms[operation](this.colorPalette); //Fixed it
     this.newFile = this.file.replace(/\.bmp/, `.${operation}.bmp`);
 };
 
@@ -68,13 +69,13 @@ const transforms = {
 
 transformGreyscale: (bmp) => {
 
-    console.log('Transforming bitmap into greyscale', bmp);
+    // console.log('Transforming bitmap into greyscale', bmp);
 
     //TODO: Figure out a way to validate that the bmp instance is actually valid before trying to transform it
 
     //TODO: alter bmp to make the image greyscale ...
     let average = 0;
-    for(let i = 54; i < bmp.length; i++) {
+    for(let i = 0; i < bmp.length; i++) {
             average += bmp[i];
         if(i % 3 == 0 && bmp[i] != 0) {
             average = Math.round(average / 3);
