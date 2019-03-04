@@ -105,7 +105,7 @@ console.log('step 5')
 // const transforms = {
 //     greyscale: transformGreyscale,
 //     invert: doTheInversion
-// }; //don't need this anymore since "tarnsforms" is declared above
+// }; //don't need this anymore since "transforms" is declared above
 
 console.log('step 6')
 
